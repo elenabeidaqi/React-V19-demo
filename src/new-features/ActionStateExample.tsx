@@ -1,5 +1,5 @@
-import { useActionState } from "react";
 import axios from "axios";
+import { useActionState } from "react";
 
 interface FormState {
   success: boolean;
@@ -18,7 +18,7 @@ async function submitForm(_prevState: FormState, formData: FormData) {
   }
 }
 
-const ActionStateExample = () => {
+export default function ActionStateExample() {
   const [state, submitAction, isPending] = useActionState(submitForm, {
     success: false,
     error: "",
@@ -60,6 +60,4 @@ const ActionStateExample = () => {
       </div>
     </form>
   );
-};
-
-export default ActionStateExample;
+}
