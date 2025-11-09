@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UseoptimisticRouteImport } from './routes/useoptimistic'
 import { Route as UseactionstateRouteImport } from './routes/useactionstate'
+import { Route as ProductsImageRouteImport } from './routes/productsImage'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
 
@@ -22,6 +23,11 @@ const UseoptimisticRoute = UseoptimisticRouteImport.update({
 const UseactionstateRoute = UseactionstateRouteImport.update({
   id: '/useactionstate',
   path: '/useactionstate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductsImageRoute = ProductsImageRouteImport.update({
+  id: '/productsImage',
+  path: '/productsImage',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProductsRoute = ProductsRouteImport.update({
@@ -38,12 +44,14 @@ const IndexRoute = IndexRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
+  '/productsImage': typeof ProductsImageRoute
   '/useactionstate': typeof UseactionstateRoute
   '/useoptimistic': typeof UseoptimisticRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
+  '/productsImage': typeof ProductsImageRoute
   '/useactionstate': typeof UseactionstateRoute
   '/useoptimistic': typeof UseoptimisticRoute
 }
@@ -51,20 +59,38 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/products': typeof ProductsRoute
+  '/productsImage': typeof ProductsImageRoute
   '/useactionstate': typeof UseactionstateRoute
   '/useoptimistic': typeof UseoptimisticRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/products' | '/useactionstate' | '/useoptimistic'
+  fullPaths:
+    | '/'
+    | '/products'
+    | '/productsImage'
+    | '/useactionstate'
+    | '/useoptimistic'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/products' | '/useactionstate' | '/useoptimistic'
-  id: '__root__' | '/' | '/products' | '/useactionstate' | '/useoptimistic'
+  to:
+    | '/'
+    | '/products'
+    | '/productsImage'
+    | '/useactionstate'
+    | '/useoptimistic'
+  id:
+    | '__root__'
+    | '/'
+    | '/products'
+    | '/productsImage'
+    | '/useactionstate'
+    | '/useoptimistic'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ProductsRoute: typeof ProductsRoute
+  ProductsImageRoute: typeof ProductsImageRoute
   UseactionstateRoute: typeof UseactionstateRoute
   UseoptimisticRoute: typeof UseoptimisticRoute
 }
@@ -83,6 +109,13 @@ declare module '@tanstack/react-router' {
       path: '/useactionstate'
       fullPath: '/useactionstate'
       preLoaderRoute: typeof UseactionstateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/productsImage': {
+      id: '/productsImage'
+      path: '/productsImage'
+      fullPath: '/productsImage'
+      preLoaderRoute: typeof ProductsImageRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/products': {
@@ -105,6 +138,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProductsRoute: ProductsRoute,
+  ProductsImageRoute: ProductsImageRoute,
   UseactionstateRoute: UseactionstateRoute,
   UseoptimisticRoute: UseoptimisticRoute,
 }

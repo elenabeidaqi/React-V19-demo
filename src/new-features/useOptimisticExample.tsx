@@ -14,7 +14,7 @@ const UseOptimisticExample = () => {
     setOptimisticDeleteCount(newCount);
 
     try {
-      await axios.delete("https://fakestoreapi.com/products/1");
+      await axios.delete(`https://fakestoreapi.com/products/${newCount}`);
 
       setActualCount(newCount);
     } catch {
