@@ -9,12 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UsetransitionRouteImport } from './routes/usetransition'
 import { Route as UseoptimisticRouteImport } from './routes/useoptimistic'
 import { Route as UseactionstateRouteImport } from './routes/useactionstate'
 import { Route as ProductsImageRouteImport } from './routes/productsImage'
 import { Route as ProductsRouteImport } from './routes/products'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ProductProductIdRouteImport } from './routes/product.$productId'
 
+const UsetransitionRoute = UsetransitionRouteImport.update({
+  id: '/usetransition',
+  path: '/usetransition',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UseoptimisticRoute = UseoptimisticRouteImport.update({
   id: '/useoptimistic',
   path: '/useoptimistic',
@@ -40,6 +47,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductProductIdRoute = ProductProductIdRouteImport.update({
+  id: '/product/$productId',
+  path: '/product/$productId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +59,8 @@ export interface FileRoutesByFullPath {
   '/productsImage': typeof ProductsImageRoute
   '/useactionstate': typeof UseactionstateRoute
   '/useoptimistic': typeof UseoptimisticRoute
+  '/usetransition': typeof UsetransitionRoute
+  '/product/$productId': typeof ProductProductIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +68,8 @@ export interface FileRoutesByTo {
   '/productsImage': typeof ProductsImageRoute
   '/useactionstate': typeof UseactionstateRoute
   '/useoptimistic': typeof UseoptimisticRoute
+  '/usetransition': typeof UsetransitionRoute
+  '/product/$productId': typeof ProductProductIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,6 +78,8 @@ export interface FileRoutesById {
   '/productsImage': typeof ProductsImageRoute
   '/useactionstate': typeof UseactionstateRoute
   '/useoptimistic': typeof UseoptimisticRoute
+  '/usetransition': typeof UsetransitionRoute
+  '/product/$productId': typeof ProductProductIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -71,6 +89,8 @@ export interface FileRouteTypes {
     | '/productsImage'
     | '/useactionstate'
     | '/useoptimistic'
+    | '/usetransition'
+    | '/product/$productId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -78,6 +98,8 @@ export interface FileRouteTypes {
     | '/productsImage'
     | '/useactionstate'
     | '/useoptimistic'
+    | '/usetransition'
+    | '/product/$productId'
   id:
     | '__root__'
     | '/'
@@ -85,6 +107,8 @@ export interface FileRouteTypes {
     | '/productsImage'
     | '/useactionstate'
     | '/useoptimistic'
+    | '/usetransition'
+    | '/product/$productId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,10 +117,19 @@ export interface RootRouteChildren {
   ProductsImageRoute: typeof ProductsImageRoute
   UseactionstateRoute: typeof UseactionstateRoute
   UseoptimisticRoute: typeof UseoptimisticRoute
+  UsetransitionRoute: typeof UsetransitionRoute
+  ProductProductIdRoute: typeof ProductProductIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/usetransition': {
+      id: '/usetransition'
+      path: '/usetransition'
+      fullPath: '/usetransition'
+      preLoaderRoute: typeof UsetransitionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/useoptimistic': {
       id: '/useoptimistic'
       path: '/useoptimistic'
@@ -132,6 +165,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product/$productId': {
+      id: '/product/$productId'
+      path: '/product/$productId'
+      fullPath: '/product/$productId'
+      preLoaderRoute: typeof ProductProductIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -141,6 +181,8 @@ const rootRouteChildren: RootRouteChildren = {
   ProductsImageRoute: ProductsImageRoute,
   UseactionstateRoute: UseactionstateRoute,
   UseoptimisticRoute: UseoptimisticRoute,
+  UsetransitionRoute: UsetransitionRoute,
+  ProductProductIdRoute: ProductProductIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

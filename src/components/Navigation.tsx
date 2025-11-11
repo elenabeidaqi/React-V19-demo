@@ -34,6 +34,14 @@ const Navigation = () => {
           useOptimistic Example
         </Link>
         <Link
+          to="/usetransition"
+          className={`px-4 py-2 rounded-md transition-colors ${
+            isActive("/usetransition") ? "bg-blue-800" : "hover:bg-blue-700"
+          }`}
+        >
+          useTransition Example
+        </Link>
+        <Link
           to="/productsImage"
           className={`px-4 py-2 rounded-md transition-colors ${
             isActive("/productsImage") ? "bg-blue-800" : "hover:bg-blue-700"

@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Suspense, use, useOptimistic, useState, useTransition } from "react";
+import { Link } from "@tanstack/react-router";
+import axios from "axios";
 
 type ProductData = {
   id: number;
@@ -34,8 +36,10 @@ async function fetchProduct(): Promise<ProductData[]> {
 }
 
 async function addToCartAPI(productId: number): Promise<void> {
-  await new Promise((resolve) => setTimeout(resolve, 500));
-  void productId;
+  const cart = { userId: 1, products: [{ id: productId }] };
+  axios
+    .post("https://fakestoreapi.com/carts", cart)
+    .then((response) => console.log(response.data));
 }
 
 function Products() {
@@ -54,7 +58,6 @@ function Product({
   productDataPromise: Promise<ProductData[]>;
 }) {
   const products = use(productDataPromise);
-  const [isPending, startTransition] = useTransition();
   const [actualCart, setActualCart] = useState<Map<number, number>>(new Map());
 
   const [optimisticCart, setOptimisticCart] = useOptimistic(
@@ -73,17 +76,18 @@ function Product({
   const addToCart = async (productId: number) => {
     setOptimisticCart({ productId, quantity: 1 });
 
-    try {
-      await addToCartAPI(productId);
-      setActualCart((prev) => {
-        const newCart = new Map(prev);
-        newCart.set(productId, (newCart.get(productId) || 0) + 1);
-        return newCart;
+    addToCartAPI(productId)
+      .then(() => {
+        setActualCart((prev) => {
+          const newCart = new Map(prev);
+          newCart.set(productId, (newCart.get(productId) || 0) + 1);
+          return newCart;
+        });
+      })
+      .catch((error) => {
+        setOptimisticCart({ productId, quantity: -1 });
+        console.error("Failed to add to cart:", error);
       });
-    } catch (error) {
-      setOptimisticCart({ productId, quantity: -1 });
-      console.error("Failed to add to cart:", error);
-    }
   };
   return (
     <div className="mt-12 flex flex-wrap justify-center items-center gap-4">
@@ -105,26 +109,53 @@ function Product({
             <p className="text-gray-700 font-semibold">
               ${product.price.toFixed(2)}
             </p>
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                startTransition(() => addToCart(product.id));
-              }}
-              disabled={isPending}
-              className="bg-blue-500 text-white p-2 rounded-md w-full cursor-pointer hover:bg-blue-600 transition-colors mt-2 flex items-center justify-center gap-2"
+            <Link
+              to="/product/$productId"
+              params={{ productId: product.id.toString() }}
+              className="text-blue-500 hover:underline mt-2 block"
             >
-              Add to cart
-              {cartQuantity > 0 && (
-                <span className="bg-blue-600 px-2 py-1 rounded text-sm">
-                  {cartQuantity}
-                </span>
-              )}
-            </button>
+              View Details
+            </Link>
+            <ProductCard
+              product={product}
+              cartQuantity={cartQuantity}
+              onAddToCart={addToCart}
+            />
           </div>
         );
       })}
     </div>
+  );
+}
+
+function ProductCard({
+  product,
+  cartQuantity,
+  onAddToCart,
+}: {
+  product: ProductData;
+  cartQuantity: number;
+  onAddToCart: (productId: number) => Promise<void>;
+}) {
+  const [isPending, startTransition] = useTransition();
+
+  return (
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        startTransition(() => onAddToCart(product.id));
+      }}
+      disabled={isPending}
+      className="bg-blue-500 text-white p-2 rounded-md w-full cursor-pointer hover:bg-blue-600 transition-colors mt-2 flex items-center justify-center gap-2"
+    >
+      Add to cart
+      {cartQuantity > 0 && (
+        <span className="bg-blue-600 px-2 py-1 rounded text-sm">
+          {isPending ? "..." : cartQuantity}
+        </span>
+      )}
+    </button>
   );
 }
 
